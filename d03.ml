@@ -38,21 +38,14 @@ module RuckSack = struct
         let rucksack = List.init (String.length r) (String.get r) in
         let c_size = (List.length rucksack) / 2  in
         let c1 = of_list (take c_size rucksack) in
-        let c2 = drop c_size rucksack in
-        let rec get_dup' c1 = function
-            | [] -> raise (Error "No duplicates!")
-            | x::xs when (cardinal (add x c1)) = (cardinal c1) -> x
-            | x::xs -> get_dup' c1 xs
-        in get_dup' c1 c2
+        let c2 = of_list (drop c_size rucksack) in
+        min_elt @@ inter c1 c2
 
     let get_priority_sum f =
         let rec get_priority_sum' total = function
             | x::xs -> get_priority_sum' (total + (get_priority @@ get_dup x)) xs
             | _ -> total
         in get_priority_sum' 0 (get_items f)
-
-    let get_dupes f = 
-        List.fold_left (fun acc curr -> (get_dup curr)::acc) [] (get_items f)
 end
 
 let () =
